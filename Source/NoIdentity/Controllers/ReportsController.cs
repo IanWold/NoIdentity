@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace NoIdentity.Controllers
 {
+    /// <summary>
+    /// The Authorize attribute requires that a user is logged in
+    /// </summary>
     [Authorize]
     public class ReportsController : Controller
     {

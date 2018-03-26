@@ -38,10 +38,10 @@ namespace NoIdentity.Controllers
                 {
                     // Construct a list of claims to log the user in with. This data is stored in session
                     var claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
-                };
+                    {
+                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
+                    };
 
                     // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -75,9 +75,15 @@ namespace NoIdentity.Controllers
             }
         }
 
+        /// <summary>
+        /// Log the user out
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // This can also be specified when you register cookie authentication in Startup.cs
             return RedirectToAction("Login", "Authentication");
         }
     }

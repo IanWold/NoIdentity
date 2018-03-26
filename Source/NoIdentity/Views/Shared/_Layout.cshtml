@@ -33,6 +33,11 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a></li>
+
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li><a asp-area="" asp-controller="Admin" asp-action="Users">Users</a></li>
+                        }
                     }
                     else
                     {

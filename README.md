@@ -4,6 +4,8 @@ The ASP.NET Identity team hates me; this is the secret they don't want you to kn
 
 This project demonstrates the basics of using semi-custom cookie authentication in ASP.NET Core MVC 5 to handle user authentication and state management. It's not totally complete at the moment, but log in and log out is working.
 
+This is probably a lot less secure than Identity, but I don't like Identity and that's probably why you're here too.
+
 ## `Source/NoIdentity`
 
 The authentication/login implementation is spread across these files:

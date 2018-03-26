@@ -46,7 +46,7 @@ namespace NoIdentity.Business
         public static User GetByUsername(string username) =>
             Dal_User.GetByUsername(username) is Dal_User dal
             ? new User(dal)
-            : throw new ArgumentException("Username or Password is incorrect.");
+            : throw new ArgumentException("Username is incorrect.");
 
         public static IEnumerable<User> GetAllByRole(int id) =>
             Dal_User.GetAllByRole(id) is IEnumerable<Dal_User> users

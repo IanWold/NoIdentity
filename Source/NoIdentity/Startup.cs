@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +21,7 @@ namespace NoIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Add cookie authentication service
+            // Add cookie authentication service
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                     {
@@ -30,6 +29,9 @@ namespace NoIdentity
                         options.EventsType = typeof(NoIdentityCookieAuthenticationEvents);
                     }
                 );
+
+            // This is needed for that cookie events class
+            services.AddScoped<NoIdentityCookieAuthenticationEvents>();
 
             services.AddMvc();
         }
