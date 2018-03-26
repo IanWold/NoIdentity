@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NoIdentity.ViewModels;
 using System.Web;
-using Microsoft.Owin.Security;
+using Microsoft.AspNetCore.Authentication;
 
 namespace NoIdentity.Controllers
 {
@@ -18,14 +18,18 @@ namespace NoIdentity.Controllers
         }
 
         /// <summary>
-        /// Thanks to: [SO link]
+        /// Log our user in.
+        /// 
+        /// Thanks to:
+        ///     https://stackoverflow.com/questions/31511386/owin-cookie-authentication-without-asp-net-identity
+        ///     https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
         /// </summary>
         /// <param name="model"></param>
         /// <param name="redirectUrl"></param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model, string redirectUrl)
+        public async Task<IActionResult> Login(LoginViewModel model, string redirectUrl)
         {
             try
             {
@@ -45,11 +49,7 @@ namespace NoIdentity.Controllers
                     identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
                 }
 
-                //Still broken:
-                var context = Request.GetOwinContext();
-                var authManager = context.Authentication;
-
-                authManager.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
+                await HttpContext.SignInAsync("Cookie", new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
 
                 return RedirectToAction("Index", "Home");
             }
