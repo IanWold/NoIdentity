@@ -1,15 +1,27 @@
 ﻿using System;
 using NoIdentity.DataAccess;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NoIdentity.Business
 {
     public class User
     {
-        private User() { }
+        private User(Dal_User dal)
+        {
+            Id = dal.Id;
+            RoleId = dal.RoleId;
+            FirstName = dal.FirstName;
+            LastName = dal.LastName;
+            Username = dal.Username;
+            Password = dal.Password;
+        }
 
         #region Properties
 
         public int Id { get; set; }
+
+        public int RoleId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -23,46 +35,20 @@ namespace NoIdentity.Business
 
         #region Business Methods
 
-        public static User GetById(int id)
-        {
-            if (Dal_User.GetById(id) is Dal_User dal)
-            {
-                var toReturn = new User();
-                toReturn.ReadValues(dal);
-                return toReturn;
-            }
-            else throw new ArgumentException("Id is incorrect.");
-        }
+        public static User GetById(int id) =>
+            Dal_User.GetById(id) is Dal_User dal
+            ? new User(dal)
+            : throw new ArgumentException("Id is incorrect.");
 
-        public static User GetByUsernameAndPassword(string username, string password)
-        {
-            if (Dal_User.GetByUsernameAndPassword(username, password) is Dal_User dal)
-            {
-                var toReturn = new User();
-                toReturn.ReadValues(dal);
-                return toReturn;
-            }
-            else throw new ArgumentException("Username or Password is incorrect.");
-        }
+        public static User GetByUsernameAndPassword(string username, string password) =>
+            Dal_User.GetByUsernameAndPassword(username, password) is Dal_User dal
+            ? new User(dal)
+            : throw new ArgumentException("Username or Password is incorrect.");
 
-        // Need:
-        // Create
-        // Save
-        // Delete
-        // Etc...
-
-        #endregion
-
-        #region Data Access
-
-        public void ReadValues(Dal_User dal)
-        {
-            Id = dal.Id;
-            FirstName = dal.FirstName;
-            LastName = dal.LastName;
-            Username = dal.Username;
-            Password = dal.Password;
-        }
+        public static IEnumerable<User> GetAllByRole(int id) =>
+            Dal_User.GetAllByRole(id) is IEnumerable<Dal_User> users
+            ? users.Select(u => new User(u))
+            : throw new ArgumentException("Role Id is incorrect.");
 
         #endregion
     }

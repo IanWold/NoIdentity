@@ -39,14 +39,13 @@ namespace NoIdentity.Controllers
 
                 var identity = new ClaimsIdentity(claims, "ApplicationCookie");
 
-                // Add roles into claims
-                //var roles = _roleService.GetByUserId(user.Id);
-                //if (roles.Any())
-                //{
-                //    var roleClaims = roles.Select(r => new Claim(ClaimTypes.Role, r.Name));
-                //    identity.AddClaims(roleClaims);
-                //}
+                var role = Business.Role.GetById(user.RoleId);
+                if (role.Id > -1)
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
+                }
 
+                //Still broken:
                 var context = Request.GetOwinContext();
                 var authManager = context.Authentication;
 
@@ -54,9 +53,13 @@ namespace NoIdentity.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return RedirectToAction("Login", "Authentication");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
             }
         } 
     }
