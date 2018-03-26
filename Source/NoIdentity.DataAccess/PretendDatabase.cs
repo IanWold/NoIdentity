@@ -16,6 +16,7 @@ namespace NoIdentity.DataAccess
             public string LastName;
             public string Username;
             public string Password;
+            public DateTime LastModifiedDate;
         }
 
         public static List<PretendDatabase_User> Users = new List<PretendDatabase_User>()
@@ -27,7 +28,8 @@ namespace NoIdentity.DataAccess
                 FirstName = "Bob",
                 LastName = "Guy",
                 Username = "bobguy",
-                Password = "a"
+                Password = "a",
+                LastModifiedDate = DateTime.Now
             },
             new PretendDatabase_User()
             {
@@ -36,7 +38,8 @@ namespace NoIdentity.DataAccess
                 FirstName = "Sarah",
                 LastName = "Parson",
                 Username = "sparson",
-                Password = "b"
+                Password = "b",
+                LastModifiedDate = DateTime.Now
             },
             new PretendDatabase_User()
             {
@@ -45,7 +48,8 @@ namespace NoIdentity.DataAccess
                 FirstName = "Dalai",
                 LastName = "Lama",
                 Username = "dalama",
-                Password = "c"
+                Password = "c",
+                LastModifiedDate = DateTime.Now
             }
         };
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using NoIdentity.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -33,37 +34,40 @@ namespace NoIdentity.Controllers
             try
             {
                 // Get user matching provided login credentials
-                var user = Business.User.GetByUsernameAndPassword(model.Username, model.Password);
-
-                // Construct a list of claims to log the user in with. This data is stored in session
-                var claims = new[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.Username),
-                    new Claim(ClaimTypes.GivenName, user.FirstName),
-                    new Claim(ClaimTypes.Surname, user.LastName)
+                if (Business.User.GetByUsername(model.Username) is Business.User user && user.Password == model.Password)
+                {
+                    // Construct a list of claims to log the user in with. This data is stored in session
+                    var claims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
                 };
 
-                // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                // Demonstrates how to use roles with this approach
-                var role = Business.Role.GetById(user.RoleId);
-                if (role.Id > -1)
-                {
-                    identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
-                }
-
-                // This actually signs the user in
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(identity),
-                    new AuthenticationProperties()
+                    // Demonstrates how to use roles with this approach
+                    var role = Business.Role.GetById(user.RoleId);
+                    if (role.Id > -1)
                     {
-                        IsPersistent = false
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
                     }
-                );
 
-                // This can be specified when you register cookie authentication in Startup.cs
-                return RedirectToAction("Index", "Home");
+                    // This actually signs the user in
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(identity),
+                        new AuthenticationProperties()
+                        {
+                            IsPersistent = false
+                        }
+                    );
+
+                    // This can be specified when you register cookie authentication in Startup.cs
+                    return RedirectToAction("Index", "Home");
+                }
+                else throw new ArgumentException("Username or Password incorrect.");
+
             }
             catch (ArgumentException)
             {

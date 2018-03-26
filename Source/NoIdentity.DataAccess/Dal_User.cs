@@ -13,10 +13,12 @@ namespace NoIdentity.DataAccess
         private Dal_User(PretendDatabase.PretendDatabase_User db)
         {
             Id = db.Id;
+            RoleId = db.RoleId;
             FirstName = db.FirstName;
             LastName = db.LastName;
             Username = db.Username;
             Password = db.Password;
+            LastModifiedDate = db.LastModifiedDate;
         }
 
         #endregion
@@ -29,6 +31,7 @@ namespace NoIdentity.DataAccess
         public string LastName;
         public string Username;
         public string Password;
+        public DateTime LastModifiedDate;
 
         #endregion
 
@@ -39,8 +42,8 @@ namespace NoIdentity.DataAccess
             ? new Dal_User(user)
             : null;
 
-        public static Dal_User GetByUsernameAndPassword(string username, string password) =>
-            PretendDatabase.Users.FirstOrDefault(u => u.Username == username && u.Password == password) is PretendDatabase.PretendDatabase_User user
+        public static Dal_User GetByUsername(string username) =>
+            PretendDatabase.Users.FirstOrDefault(u => u.Username == username) is PretendDatabase.PretendDatabase_User user
             ? new Dal_User(user)
             : null;
 

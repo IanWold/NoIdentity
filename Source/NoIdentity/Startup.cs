@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +24,12 @@ namespace NoIdentity
         {
             //Add cookie authentication service
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+                .AddCookie(options =>
+                    {
+                        // This custom class will capture events related to cookie authentication
+                        options.EventsType = typeof(NoIdentityCookieAuthenticationEvents);
+                    }
+                );
 
             services.AddMvc();
         }

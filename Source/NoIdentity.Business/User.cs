@@ -15,6 +15,7 @@ namespace NoIdentity.Business
             LastName = dal.LastName;
             Username = dal.Username;
             Password = dal.Password;
+            LastModifiedDate = dal.LastModifiedDate;
         }
 
         #region Properties
@@ -31,6 +32,8 @@ namespace NoIdentity.Business
 
         public string Password { get; set; }
 
+        public DateTime LastModifiedDate { get; set; }
+
         #endregion
 
         #region Business Methods
@@ -40,8 +43,8 @@ namespace NoIdentity.Business
             ? new User(dal)
             : throw new ArgumentException("Id is incorrect.");
 
-        public static User GetByUsernameAndPassword(string username, string password) =>
-            Dal_User.GetByUsernameAndPassword(username, password) is Dal_User dal
+        public static User GetByUsername(string username) =>
+            Dal_User.GetByUsername(username) is Dal_User dal
             ? new User(dal)
             : throw new ArgumentException("Username or Password is incorrect.");
 
