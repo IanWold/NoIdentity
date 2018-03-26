@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace NoIdentity
 {
+    /// <summary>
+    /// Important reading: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?tabs=aspnetcore2x
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -23,6 +26,7 @@ namespace NoIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Add cookie authentication service
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
 
@@ -44,8 +48,10 @@ namespace NoIdentity
 
             app.UseStaticFiles();
 
+            //Specify this to add ASP.NET authentication middleware
             app.UseAuthentication();
 
+            //This makes it hungry for cookies or something
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>
