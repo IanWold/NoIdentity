@@ -28,6 +28,8 @@ namespace NoIdentity.Business
 
         public string LastName { get; set; }
 
+        public string FullName { get => FirstName + " " + LastName; }
+
         public string Username { get; set; }
 
         public string Password { get; set; }

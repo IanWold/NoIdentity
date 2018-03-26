@@ -1,0 +1,29 @@
+﻿@model Report
+@{
+    ViewData["Title"] = "Report";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h1>@Model.Name</h1>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 col-sm-4">
+        <b>Owner</b>
+    </div>
+    <div class="col-md-9 col-sm-8">
+        @Model.OwnerName
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 col-sm-4">
+        <b>Data</b>
+    </div>
+    <div class="col-md-9 col-sm-8">
+        @Model.Data
+    </div>
+</div>

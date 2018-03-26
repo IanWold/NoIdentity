@@ -1,13 +1,30 @@
-﻿
+﻿@model List<Report>
 @{
     ViewData["Title"] = "Reports";
 }
 
 <h1>Reports</h1>
 
-<p>
-    Put some kind of graph here or something...
-</p>
-<p>
-    Whatever, you're logged in.
-</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            @if (User.IsInRole("Administrator"))
+            {
+                <th>Owner</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model)
+        {
+            <tr>
+                <td><a asp-area="" asp-controller="Reports" asp-action="Report" asp-route-id="@report.Id">@report.Name</a></td>
+                @if (User.IsInRole("Administrator"))
+                {
+                    <td>@report.OwnerName</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

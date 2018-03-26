@@ -40,6 +40,7 @@ namespace NoIdentity.Controllers
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, user.Username),
+                        new Claim("Id", user.Id.ToString()),
                         new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
                     };
 
