@@ -30,11 +30,24 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a asp-area="" asp-controller="Authentication" asp-action="Login">Login</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-area="" asp-controller="Authentication" asp-action="LogOut">Log Out</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Authentication" asp-action="Login">Login</a></li>
+                    }
                 </ul>
             </div>
         </div>

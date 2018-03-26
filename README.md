@@ -6,10 +6,11 @@ This project demonstrates the basics of using semi-custom cookie authentication 
 
 ## `Source/NoIdentity`
 
-There are two main places you need to look:
+The authentication/login implementation is spread across these files:
 
 * `Startup.cs` registers cookie authentication service
 * `Controllers/AuthenticationController.cs` performs authentication
+* `Views/Authentication/Login.cshtml` has the login UI
 
 ## Business Logic
 

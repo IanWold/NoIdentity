@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using NoIdentity.ViewModels;
-using System.Web;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace NoIdentity.Controllers
 {
@@ -19,11 +16,12 @@ namespace NoIdentity.Controllers
         }
 
         /// <summary>
-        /// Log our user in.
+        /// Log our user in with cookies
         /// 
         /// Thanks to:
         ///     https://stackoverflow.com/questions/31511386/owin-cookie-authentication-without-asp-net-identity
         ///     https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
+        ///     https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?tabs=aspnetcore2x
         /// </summary>
         /// <param name="model"></param>
         /// <param name="redirectUrl"></param>
@@ -60,21 +58,23 @@ namespace NoIdentity.Controllers
                     new ClaimsPrincipal(identity),
                     new AuthenticationProperties()
                     {
-                        IsPersistent = true
+                        IsPersistent = false
                     }
                 );
 
                 // This can be specified when you register cookie authentication in Startup.cs
-                return RedirectToAction("Index", "Reports");
+                return RedirectToAction("Index", "Home");
             }
             catch (ArgumentException)
             {
                 return RedirectToAction("Login", "Authentication");
             }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-        } 
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Authentication");
+        }
     }
 }

@@ -2,6 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1>This is the logged out view</h1>
-
-<h1>This is the logged in view</h1>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <h1>This is the logged in view</h1>
+        Authenticated
+    </p>
+}
+else
+{
+    <h1>This is the logged out view</h1>
+    <p>
+        Not authenticated
+    </p>
+}
