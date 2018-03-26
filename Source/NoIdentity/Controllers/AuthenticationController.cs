@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NoIdentity.ViewModels;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace NoIdentity.Controllers
 {
@@ -41,7 +42,7 @@ namespace NoIdentity.Controllers
                     new Claim(ClaimTypes.Surname, user.LastName)
                 };
 
-                var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 var role = Business.Role.GetById(user.RoleId);
                 if (role.Id > -1)
@@ -49,15 +50,15 @@ namespace NoIdentity.Controllers
                     identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
                 }
 
-                await HttpContext.SignInAsync("Cookie", new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Reports");
             }
             catch (ArgumentException)
             {
                 return RedirectToAction("Login", "Authentication");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return RedirectToAction("Index", "Home");
             }
