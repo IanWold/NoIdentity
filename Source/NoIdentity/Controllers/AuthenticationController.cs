@@ -39,7 +39,8 @@ namespace NoIdentity.Controllers
                     // Construct a list of claims to log the user in with. This data is stored in session
                     var claims = new List<Claim>()
                     {
-                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim(ClaimTypes.Name, user.FullName),
+                        new Claim(ClaimTypes.NameIdentifier, user.Username),
                         new Claim("Id", user.Id.ToString()),
                         new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
                     };

@@ -47,6 +47,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <li class="navbar-text">Hello, @User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.Name).Value</li>
                         <li><a asp-area="" asp-controller="Authentication" asp-action="LogOut">Log Out</a></li>
                     }
                     else

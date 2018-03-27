@@ -24,7 +24,7 @@ namespace NoIdentity
             var userPrincipal = context.Principal;
             
             var lastChanged = userPrincipal.Claims.Where(c => c.Type == "LastModifiedDate").Select(c => c.Value).FirstOrDefault();
-            var username = userPrincipal.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).FirstOrDefault();
+            var username = userPrincipal.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).FirstOrDefault();
 
             if (string.IsNullOrEmpty(lastChanged) || User.GetByUsername(username).LastModifiedDate.ToString() != lastChanged)
             {
