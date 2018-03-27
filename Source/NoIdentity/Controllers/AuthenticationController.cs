@@ -17,7 +17,7 @@ namespace NoIdentity.Controllers
         }
 
         /// <summary>
-        /// Log our user in with cookies
+        /// Log our user in with cookies.
         /// 
         /// Thanks to:
         ///     https://stackoverflow.com/questions/31511386/owin-cookie-authentication-without-asp-net-identity
@@ -33,11 +33,13 @@ namespace NoIdentity.Controllers
         {
             try
             {
-                // Get user matching provided login credentials
-                if (Business.User.GetByUsername(model.Username) is Business.User user && user.Password == model.Password)
+                if (ModelState.IsValid)
                 {
-                    // Construct a list of claims to log the user in with. This data is stored in session
-                    var claims = new List<Claim>()
+                    // Get user matching provided login credentials
+                    if (Business.User.GetByUsername(model.Username) is Business.User user && user.Password == model.Password)
+                    {
+                        // Construct a list of claims to log the user in with. This data is stored in session
+                        var claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, user.FullName),
                         new Claim(ClaimTypes.NameIdentifier, user.Username),
@@ -45,30 +47,32 @@ namespace NoIdentity.Controllers
                         new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
                     };
 
-                    // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
+                        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    // Demonstrates how to use roles with this approach
-                    var role = Business.Role.GetById(user.RoleId);
-                    if (role.Id > -1)
-                    {
-                        identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
-                    }
-
-                    // This actually signs the user in
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(identity),
-                        new AuthenticationProperties()
+                        // Demonstrates how to use roles with this approach
+                        var role = Business.Role.GetById(user.RoleId);
+                        if (role.Id > -1)
                         {
-                            IsPersistent = false
+                            identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
                         }
-                    );
 
-                    // This can be specified when you register cookie authentication in Startup.cs
-                    return RedirectToAction("Index", "Home");
+                        // This actually signs the user in
+                        await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(identity),
+                            new AuthenticationProperties()
+                            {
+                                IsPersistent = false
+                            }
+                        );
+
+                        // This can be specified when you register cookie authentication in Startup.cs
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else throw new ArgumentException("Username or Password incorrect.");
                 }
-                else throw new ArgumentException("Username or Password incorrect.");
+                else return RedirectToAction("Login", "Authentication");
 
             }
             catch (ArgumentException)
