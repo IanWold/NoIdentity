@@ -36,7 +36,7 @@
 
                         @if (User.IsInRole("Administrator"))
                         {
-                            <li><a asp-area="" asp-controller="Admin" asp-action="Users">Users</a></li>
+                            <li><a asp-area="" asp-controller="Manage" asp-action="Users">Users</a></li>
                         }
                     }
                     else
@@ -48,6 +48,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="navbar-text">Hello, @User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.Name).Value</li>
+                        <li><a asp-area="" asp-controller="Manage" asp-action="Account" asp-route-id="@User.Claims.First(c => c.Type == "Id").Value">Account</a></li>
                         <li><a asp-area="" asp-controller="Authentication" asp-action="LogOut">Log Out</a></li>
                     }
                     else
