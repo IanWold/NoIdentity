@@ -21,6 +21,12 @@ namespace NoIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // To use this without the cookie events:
+            /*
+             * services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+             *     .AddCookie();
+             */
+
             // Add cookie authentication service
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
