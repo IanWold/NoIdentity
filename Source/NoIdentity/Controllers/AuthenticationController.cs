@@ -40,12 +40,12 @@ namespace NoIdentity.Controllers
                     {
                         // Construct a list of claims to log the user in with. This data is stored in session
                         var claims = new List<Claim>()
-                    {
-                        new Claim(ClaimTypes.Name, user.FullName),
-                        new Claim(ClaimTypes.NameIdentifier, user.Username),
-                        new Claim("Id", user.Id.ToString()),
-                        new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
-                    };
+                        {
+                            new Claim(ClaimTypes.Name, user.FullName),
+                            new Claim(ClaimTypes.NameIdentifier, user.Username),
+                            new Claim("Id", user.Id.ToString()),
+                            new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
+                        };
 
                         // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
                         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
