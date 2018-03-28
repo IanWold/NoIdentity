@@ -20,9 +20,11 @@ namespace NoIdentity.Controllers
         /// Log our user in with cookies.
         /// 
         /// Thanks to:
-        ///     https://stackoverflow.com/questions/31511386/owin-cookie-authentication-without-asp-net-identity
         ///     https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
         ///     https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?tabs=aspnetcore2x
+        ///     
+        /// And for the .NET Framework requirements:
+        ///     https://stackoverflow.com/questions/31511386/owin-cookie-authentication-without-asp-net-identity
         /// </summary>
         /// <param name="model"></param>
         /// <param name="redirectUrl"></param>
@@ -56,8 +58,7 @@ namespace NoIdentity.Controllers
                         {
                             identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
                         }
-
-                        // This actually signs the user in
+                        
                         await HttpContext.SignInAsync(
                             CookieAuthenticationDefaults.AuthenticationScheme,
                             new ClaimsPrincipal(identity),
@@ -66,6 +67,20 @@ namespace NoIdentity.Controllers
                                 IsPersistent = false
                             }
                         );
+
+                        /* If you are using .NET Framework, use the following alternate code to sign in:
+                         * 
+                         * var context = Request.GetOwinContext();
+                         * var authManager = context.Authentication;
+                         *
+                         * authManager.SignIn(
+                         *     new AuthenticationProperties()
+                         *     {
+                         *         IsPersistent = false
+                         *     },
+                         *     identity
+                         * );
+                         */
 
                         // This can be specified when you register cookie authentication in Startup.cs
                         return RedirectToAction("Index", "Home");
@@ -88,6 +103,14 @@ namespace NoIdentity.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            /* If you are using .NET Framework, use the following alternate code to sign out:
+             * 
+             * var context = Request.GetOwinContext();
+             * var authManager = context.Authentication;
+             *
+             * authManager.SignOut("ApplicationCookie");
+             */
 
             // This can also be specified when you register cookie authentication in Startup.cs
             return RedirectToAction("Login", "Authentication");
