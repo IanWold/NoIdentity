@@ -25,7 +25,11 @@ The authentication/login implementation is spread across these files:
 
 I have some mockup business logic going. I've separated the Business and Data Access layers in a manner similar to what's done by the [CSLA Framework](https://github.com/MarimerLLC/csla). If you don't like the DAL abstraction it's pretty easy to use `Source/NoIdentity.DataAccess/Pretend Database` alone with the Business layer.
 
-## Contributing
+## .NET Framework Differences
+
+Using ASP.NET (Framework) is mostly the same as Core in this case, but there's a couple different things to note in `Source/NoIdentity/Controllers/AuthenticationController.cs`. Those are explained in [a helpful SO post I found](https://stackoverflow.com/questions/31511386/owin-cookie-authentication-without-asp-net-identity).
+
+# Contributing
 
 Feel free to add anything you think could help the project demonstrate cookie authentication. Here's a couple things I haven't gotten to yet that are on my mind:
 
