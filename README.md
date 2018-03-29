@@ -20,6 +20,7 @@ The authentication/login implementation is spread across these files:
 * `Startup.cs` registers cookie authentication service
 * `Controllers/AuthenticationController.cs` performs authentication
 * `Views/Authentication/Login.cshtml` has the login UI
+* `Views/Shared/_Layout.cshtml` has logic displaying different UI based on authentication and roles
 
 ## Business Logic
 
