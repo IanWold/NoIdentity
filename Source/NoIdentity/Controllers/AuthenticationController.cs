@@ -59,11 +59,12 @@ namespace NoIdentity.Controllers
                         new Claim(ClaimTypes.Name, user.FullName),
                         new Claim(ClaimTypes.NameIdentifier, user.Username),
                         new Claim("Id", user.Id.ToString()),
-                        new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
+                        new Claim("LastModifiedDate", user.LastModifiedDate.ToString()),
+                        new Claim(ClaimTypes.Role, role.Name) //Demonstrates using roles in claims
                     };
 
-                    // Do the signing in
-                    await HttpContext.SignInAsync(
+                // Do the signing in
+                await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)),
                         new AuthenticationProperties()
@@ -72,78 +73,78 @@ namespace NoIdentity.Controllers
                         }
                     );
 
-                    /* // If you want to use my custom AuthManager class to manage all of the above:
-                     * 
-                     * await new AuthManager.AuthManager(HttpContext, new[] {
-                     *     (ClaimTypes.Name, user.FullName),
-                     *     (ClaimTypes.NameIdentifier, user.Username),
-                     *     ("Id", user.Id.ToString()),
-                     *     ("LastModifiedDate", user.LastModifiedDate.ToString()),
-                     *     (ClaimTypes.Role, role.Name)
-                     * }).SignInAsync(new AuthenticationProperties() {
-                     *     IsPersistent = false
-                     * });
-                     */
+                /* // If you want to use my custom AuthManager class to manage all of the above:
+                 * 
+                 * await new AuthManager.AuthManager(HttpContext, new[] {
+                 *     (ClaimTypes.Name, user.FullName),
+                 *     (ClaimTypes.NameIdentifier, user.Username),
+                 *     ("Id", user.Id.ToString()),
+                 *     ("LastModifiedDate", user.LastModifiedDate.ToString()),
+                 *     (ClaimTypes.Role, role.Name)
+                 * }).SignInAsync(new AuthenticationProperties() {
+                 *     IsPersistent = false
+                 * });
+                 */
 
-                    /* // If you are using .NET Framework, use the following alternate code to sign in:
-                     * // Uncomment the ApplicationCookie string at top of file 
-                     * 
-                     * var context = Request.GetOwinContext();
-                     * var authManager = context.Authentication;
-                     *
-                     * authManager.SignIn(
-                     *     new AuthenticationProperties()
-                     *     {
-                     *         IsPersistent = false
-                     *     },
-                     *     new ClaimsIdentity(claims, ApplicationCookie)
-                     * );
-                     * 
-                     * //// No problem with the following, I figure (see static method at top of file):
-                     * // AuthManager(Request).SignIn(
-                     * //     new AuthenticationProperties()
-                     * //     {
-                     * //         IsPersistent = false
-                     * //     },
-                     * //     new ClaimsIdentity(claims, ApplicationCookie)
-                     * // );
-                     */
+                /* // If you are using .NET Framework, use the following alternate code to sign in:
+                 * // Uncomment the ApplicationCookie string at top of file 
+                 * 
+                 * var context = Request.GetOwinContext();
+                 * var authManager = context.Authentication;
+                 *
+                 * authManager.SignIn(
+                 *     new AuthenticationProperties()
+                 *     {
+                 *         IsPersistent = false
+                 *     },
+                 *     new ClaimsIdentity(claims, ApplicationCookie)
+                 * );
+                 * 
+                 * //// No problem with the following, I figure (see static method at top of file):
+                 * // AuthManager(Request).SignIn(
+                 * //     new AuthenticationProperties()
+                 * //     {
+                 * //         IsPersistent = false
+                 * //     },
+                 * //     new ClaimsIdentity(claims, ApplicationCookie)
+                 * // );
+                 */
 
-                    // This can be specified when you register cookie authentication in Startup.cs
-                    return RedirectToAction("Index", "Home");
-                }
+                // This can be specified when you register cookie authentication in Startup.cs
+                return RedirectToAction("Index", "Home");
+            }
                 else return RedirectToAction("Login", "Authentication");
 
-            }
+        }
             catch (ArgumentException)
             {
                 return RedirectToAction("Login", "Authentication");
-            }
-        }
+    }
+}
 
-        /// <summary>
-        /// Log the user out
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> LogOut()
-        {
-            //// If using the AuthManager project :
-            // await HttpContext.SignOutAsync(AuthManager.AuthManager.CookieScheme);
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+/// <summary>
+/// Log the user out
+/// </summary>
+/// <returns></returns>
+public async Task<IActionResult> LogOut()
+{
+    //// If using the AuthManager project :
+    // await HttpContext.SignOutAsync(AuthManager.AuthManager.CookieScheme);
+    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            /* //If you are using .NET Framework, use the following alternate code to sign out:
-             * 
-             * var context = Request.GetOwinContext();
-             * var authManager = context.Authentication;
-             *
-             * authManager.SignOut(ApplicationCookie);
-             * 
-             * //// No problem with the following, I figure (see static method at top of file):
-             * // AuthManager(Request).SignOut(ApplicationCookie);
-             */
+    /* //If you are using .NET Framework, use the following alternate code to sign out:
+     * 
+     * var context = Request.GetOwinContext();
+     * var authManager = context.Authentication;
+     *
+     * authManager.SignOut(ApplicationCookie);
+     * 
+     * //// No problem with the following, I figure (see static method at top of file):
+     * // AuthManager(Request).SignOut(ApplicationCookie);
+     */
 
-            // This can also be specified when you register cookie authentication in Startup.cs
-            return RedirectToAction("Login", "Authentication");
-        }
+    // This can also be specified when you register cookie authentication in Startup.cs
+    return RedirectToAction("Login", "Authentication");
+}
     }
 }
