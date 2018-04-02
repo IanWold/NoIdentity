@@ -13,8 +13,12 @@ namespace NoIdentity.Controllers
 {
     public class AuthenticationController : Controller
     {
-        // For .NET Framework - can encapsulate long call in function:
-        // static  AuthManager() => Request.GetOwinContext().Authentication;
+        //// For .NET Framework - can encapsulate long call in function:
+        //// Will need to add: using Microsoft.Owin.Security;
+        // static IAuthenticationManager AuthManager(HttpRequestBase req) => req.GetOwinContext().Authentication;
+        //
+        //// Uncomment the following for the ApplicationCookie:
+        //const string ApplicationCookie = "ApplicationCookie";
 
         public IActionResult Login()
         {
@@ -58,19 +62,17 @@ namespace NoIdentity.Controllers
                         new Claim("LastModifiedDate", user.LastModifiedDate.ToString())
                     };
 
-                    // Need to create a ClaimsIdentity specifying the cookie schema (from Startup.cs)
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
+                    // Do the signing in
                     await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(identity),
+                        new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)),
                         new AuthenticationProperties()
                         {
                             IsPersistent = false
                         }
                     );
 
-                    /* If you want to use my custom AuthManager class to manage all of the above:
+                    /* // If you want to use my custom AuthManager class to manage all of the above:
                      * 
                      * await new AuthManager.AuthManager(HttpContext, new[] {
                      *     (ClaimTypes.Name, user.FullName),
@@ -83,28 +85,29 @@ namespace NoIdentity.Controllers
                      * });
                      */
 
-                    /* If you are using .NET Framework, use the following alternate code to sign in:
-                        * 
-                        * var context = Request.GetOwinContext();
-                        * var authManager = context.Authentication;
-                        *
-                        * authManager.SignIn(
-                        *     new AuthenticationProperties()
-                        *     {
-                        *         IsPersistent = false
-                        *     },
-                        *     identity
-                        * );
-                        * 
-                        * // No problem with the following, I figure (see static method at top of file):
-                        * // AuthManager().SignIn(
-                        * //     new AuthenticationProperties()
-                        * //     {
-                        * //         IsPersistent = false
-                        * //     },
-                        * //     identity
-                        * // );
-                        */
+                    /* // If you are using .NET Framework, use the following alternate code to sign in:
+                     * // Uncomment the ApplicationCookie string at top of file 
+                     * 
+                     * var context = Request.GetOwinContext();
+                     * var authManager = context.Authentication;
+                     *
+                     * authManager.SignIn(
+                     *     new AuthenticationProperties()
+                     *     {
+                     *         IsPersistent = false
+                     *     },
+                     *     new ClaimsIdentity(claims, ApplicationCookie)
+                     * );
+                     * 
+                     * //// No problem with the following, I figure (see static method at top of file):
+                     * // AuthManager(Request).SignIn(
+                     * //     new AuthenticationProperties()
+                     * //     {
+                     * //         IsPersistent = false
+                     * //     },
+                     * //     new ClaimsIdentity(claims, ApplicationCookie)
+                     * // );
+                     */
 
                     // This can be specified when you register cookie authentication in Startup.cs
                     return RedirectToAction("Index", "Home");
@@ -124,19 +127,19 @@ namespace NoIdentity.Controllers
         /// <returns></returns>
         public async Task<IActionResult> LogOut()
         {
-            // If using the AuthManager project :
+            //// If using the AuthManager project :
             // await HttpContext.SignOutAsync(AuthManager.AuthManager.CookieScheme);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            /* If you are using .NET Framework, use the following alternate code to sign out:
+            /* //If you are using .NET Framework, use the following alternate code to sign out:
              * 
              * var context = Request.GetOwinContext();
              * var authManager = context.Authentication;
              *
-             * authManager.SignOut("ApplicationCookie");
+             * authManager.SignOut(ApplicationCookie);
              * 
-             * // No problem with the following, I figure (see static method at top of file):
-             * // AuthManager().SignOut("ApplicationCookie");
+             * //// No problem with the following, I figure (see static method at top of file):
+             * // AuthManager(Request).SignOut(ApplicationCookie);
              */
 
             // This can also be specified when you register cookie authentication in Startup.cs
