@@ -40,3 +40,6 @@ Feel free to add anything you think could help the project demonstrate cookie au
 I'm trying to keep this repo as organized as possible (for referenceability), so when you submit a PR I might ask you to organize things a bit differently than what you have, for the sake of consistency (it's NBD).
 
 Keep in mind: No Entity Framework, and no Identity :)
+
+And we have Ci!
+
